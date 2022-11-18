@@ -117,5 +117,13 @@ public class Test : MonoBehaviour
             ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
             // rawImage.texture = ImageLoadManager.Instance.tempTex;
         }
+
+        if (Input.GetKey(KeyCode.T))
+        {
+            //StartCoroutine(ImageLoadManager.WWWLoadImage_Texture2D());
+           //ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
+            // rawImage.texture = ImageLoadManager.Instance.tempTex;
+        }
+
     }
 }
