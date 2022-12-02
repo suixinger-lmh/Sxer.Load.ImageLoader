@@ -66,7 +66,8 @@ public class Test : MonoBehaviour
         ImageLoadManager.Instance.LoadImage("");
         ImageLoadManager.Instance.LoadImage(new string[] { "","",null});
         ImageLoadManager.Instance.LoadImage(tempstr2);
-        ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg",(sp)=> {
+        ImageLoadManager.Instance.UnloadImage(@"D:\SVN_CheckOut\ProjectRoot\ttesttt\Assets\StreamingAssets\屏保\1 （1）.jpg");
+       ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg",(sp)=> {
 
             Debug.Log("?");
             rawImage.texture = sp[0];
@@ -96,12 +97,14 @@ public class Test : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
+            ImageLoadManager.Instance.UnloadImage(@"D:\SVN_CheckOut\ProjectRoot\ttesttt\Assets\StreamingAssets\屏保\1 （1）.jpg");
             ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
            // rawImage.texture = ImageLoadManager.Instance.tempTex;
         }
 
         if (Input.GetKey(KeyCode.B))
         {
+            ImageLoadManager.Instance.UnloadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
             ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
             // rawImage.texture = ImageLoadManager.Instance.tempTex;
         }
@@ -120,10 +123,15 @@ public class Test : MonoBehaviour
 
         if (Input.GetKey(KeyCode.T))
         {
+
+            StartCoroutine(ImageLoadManager.WWWLoadImage_Texture2D("xxxx", () => { ; }));
+            ImageLoadManager.Instance.UnloadAllImage();
             //StartCoroutine(ImageLoadManager.WWWLoadImage_Texture2D());
            //ImageLoadManager.Instance.LoadImage(@"D:\BaiduNetdiskDownload\企业手机银行 - 副本.jpg");
             // rawImage.texture = ImageLoadManager.Instance.tempTex;
         }
 
+
+       
     }
 }

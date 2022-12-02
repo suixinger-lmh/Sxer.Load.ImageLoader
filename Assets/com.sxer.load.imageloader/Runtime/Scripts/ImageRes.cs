@@ -85,9 +85,16 @@ namespace Sxer.Load.ImageLoader
  
 
         //回调事件
-        UnityEngine.Events.UnityAction<ImageRes> imageLoadComplete;
+        //UnityEngine.Events.UnityAction<ImageRes> imageLoadComplete;
 
         public ImageType m_ImageType { get => imageType; set => imageType = value; }
+
+        public void ReleaseSource()
+        {
+            GameObject.Destroy(resTexture2D);
+            resByte = null;
+        }
+
 
         //资源字节流
         //资源纹理

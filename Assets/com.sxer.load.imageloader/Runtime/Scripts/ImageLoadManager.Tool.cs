@@ -25,14 +25,14 @@ namespace Sxer.Load.ImageLoader
                 finishDo();
         }
 
-      
-        void CreateLoadHelper(List<string> imagePaths, Action<Texture2D[]> loadAction = null, string tag = "default")
+
+        ImageLoadHelper CreateLoadHelper(List<string> imagePaths, Action<Texture2D[]> loadAction = null, string tag = "default")
         {
             //路径无意义时不生成工具
             if(imagePaths.Find(p=>!string.IsNullOrEmpty(p)) == null)
             {
                 Debug.LogError("当前批次路径全部为空！");
-                return;
+                return null;
             }
             
             //标签自增保证不重复
@@ -42,10 +42,13 @@ namespace Sxer.Load.ImageLoader
             GameObject obj = new GameObject(tag, typeof(ImageLoadHelper));
             obj.transform.SetParent(this.transform);
             ImageLoadHelper imageLoadHelper = obj.GetComponent<ImageLoadHelper>();
-            imageLoadHelper.InitHelper(this, imagePaths, loadAction);
+            imageLoadHelper.InitHelper(tag, imagePaths, loadAction);
 
             _loadHelperMap.Add(tag, imageLoadHelper);
+
+            return imageLoadHelper;
         }
+
 
         /// <summary>
         /// 对传入路径进行识别，空，已经存在列表中，新路径

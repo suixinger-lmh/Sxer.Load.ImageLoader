@@ -18,8 +18,18 @@ namespace Sxer.Load.ImageLoader
             NullPath//不使用的路径
         }
 
-       
+        public enum LoadTimeType
+        {
+            DoNotLoad,//不管理
+            APILoad,//通过代码启动下载
+            UpdateLoad,//update轮询下载
+            OnlyOneLoad//同时只开启一个下载
+        }
 
+        public LoadTimeType _loadTimeType = LoadTimeType.OnlyOneLoad;
+
+
+        public Texture2D _defaultTexture = null;
 
         //获取路径
 
@@ -34,7 +44,7 @@ namespace Sxer.Load.ImageLoader
         List<ImageRes> imageRes = new List<ImageRes>();
 
         /// <summary>
-        /// 图片处理工具集合
+        /// 图片处理工具集合tag和工具实体
         /// </summary>
         Dictionary<string, ImageLoadHelper> _loadHelperMap = new Dictionary<string, ImageLoadHelper>();
 

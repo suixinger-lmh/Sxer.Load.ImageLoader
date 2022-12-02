@@ -32,41 +32,61 @@ namespace Sxer.Load.ImageLoader
             }
         }
 
+        private void Update()
+        {
+            OnStartDownloadType(_loadTimeType);
+            OnDestroyHelper();
+            if (Input.GetKey(KeyCode.S) && Input.GetKeyDown(KeyCode.X))
+            {
+                    isGUIView = !isGUIView;
+            }
+            //keyTime += Time.deltaTime;
+            //if(Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.X) && Input.GetKey(KeyCode.I) && Input.GetKey(KeyCode.L))
+            //{
+            //    Debug.Log(isGUIView);
+            //    isGUIView = !isGUIView;
+            //}
+        }
 
+        public bool isGUIView = false;
         private void OnGUI()
         {
-            GUILayout.BeginVertical();
-            //资源工具绘制
-            if (_loadHelperMap != null)
+            if (isGUIView)
             {
                 GUILayout.BeginVertical();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("tag");
-                GUILayout.Space(50);
-                GUILayout.Label("state");
-                GUILayout.Space(50);
-                GUILayout.Label("progress");
-                GUILayout.EndHorizontal();
-                foreach (var x in _loadHelperMap)
+                //资源工具绘制
+                if (_loadHelperMap != null)
                 {
+                    GUILayout.BeginVertical();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label(x.Key);
+                    GUILayout.Label("tag");
                     GUILayout.Space(50);
-                    GUILayout.Label(x.Value._helperState.ToString());
+                    GUILayout.Label("state");
                     GUILayout.Space(50);
-                    GUILayout.Label(x.Value._loadProcess.ToString());
-                    GUILayout.Space(50);
-                    if (x.Value._helperState == HelperState.Ready)
-                    {
-                        if (GUILayout.Button("StartLoad"))
-                        {
-                            x.Value.ResourceLoad();
-                        }
-                    }
-                    
+                    GUILayout.Label("progress");
                     GUILayout.EndHorizontal();
-                }
+                    foreach (var x in _loadHelperMap)
+                    {
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label(x.Key);
+                        GUILayout.Space(50);
+                        GUILayout.Label(x.Value._helperState.ToString());
+                        GUILayout.Space(50);
+                        GUILayout.Label(x.Value._loadProcess.ToString());
+                        GUILayout.Space(50);
+                        if (x.Value._helperState == HelperState.Ready)
+                        {
+                            if (GUILayout.Button("StartLoad"))
+                            {
+                                x.Value.DoResourceLoad();
+                            }
+                        }
 
+                        GUILayout.EndHorizontal();
+                    }
+
+                    GUILayout.EndVertical();
+                }
                 GUILayout.EndVertical();
             }
 
@@ -108,7 +128,7 @@ namespace Sxer.Load.ImageLoader
             //    }
 
             //}
-            GUILayout.EndVertical();
+          
         }
 
     }
