@@ -14,125 +14,109 @@ namespace Sxer.Load.ImageLoader
     /// </summary>
     public partial class ImageLoadManager
     {
-        UnityWebRequest m_unityWebRequest;
+        //UnityWebRequest m_unityWebRequest;
 
-        public Texture tempTex;
-        public IEnumerator WWWLoadImage_Test(string path)
-        {
-            m_unityWebRequest = UnityWebRequestTexture.GetTexture(path);
-            yield return m_unityWebRequest.SendWebRequest();
-
-            //while (!m_unityWebRequest.isDone)
-            {
-                Debug.Log("加..");
-                if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
-                {
-                    tempTex = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
-                    Debug.Log(m_unityWebRequest.downloadHandler.data.Length);
-                    string temp = m_unityWebRequest.downloadHandler.data[0].ToString() + m_unityWebRequest.downloadHandler.data[1].ToString();
-                    Debug.Log(m_unityWebRequest.downloadHandler.data[0]);
-                    Debug.Log("加载完成");
-                    Debug.Log(temp);
-                    Texture2D te = new Texture2D(100, 100);
-                    te.LoadImage(m_unityWebRequest.downloadHandler.data);
-                    tempTex = te;
-                }
-            }
-        }
-
-        //public IEnumerator WWWLoadImage_Texture2D(string path)
+        //public Texture tempTex;
+        //public IEnumerator WWWLoadImage_Test(string path)
         //{
         //    m_unityWebRequest = UnityWebRequestTexture.GetTexture(path);
         //    yield return m_unityWebRequest.SendWebRequest();
-        //    if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
+
+        //    //while (!m_unityWebRequest.isDone)
         //    {
-        //        tempTex = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
-        //        Debug.Log(m_unityWebRequest.downloadHandler.data.Length);
-        //        string temp = m_unityWebRequest.downloadHandler.data[0].ToString() + m_unityWebRequest.downloadHandler.data[1].ToString();
-        //        Debug.Log(m_unityWebRequest.downloadHandler.data[0]);
-        //        Debug.Log("加载完成");
-        //        Debug.Log(temp);
-        //        Texture2D te = new Texture2D(100, 100);
-        //        te.LoadImage(m_unityWebRequest.downloadHandler.data);
-        //        tempTex = te;
+        //        Debug.Log("加..");
+        //        if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
+        //        {
+        //            tempTex = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
+        //            Debug.Log(m_unityWebRequest.downloadHandler.data.Length);
+        //            string temp = m_unityWebRequest.downloadHandler.data[0].ToString() + m_unityWebRequest.downloadHandler.data[1].ToString();
+        //            Debug.Log(m_unityWebRequest.downloadHandler.data[0]);
+        //            Debug.Log("加载完成");
+        //            Debug.Log(temp);
+        //            Texture2D te = new Texture2D(100, 100);
+        //            te.LoadImage(m_unityWebRequest.downloadHandler.data);
+        //            tempTex = te;
+        //        }
         //    }
         //}
 
 
+
+        /// <summary>
+        /// UnityWebRequestTexture加载图片
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="loadedDo"></param>
+        /// <returns></returns>
         public static IEnumerator WWWLoadImage_Texture2D(string path, System.Action loadedDo)
         {
+            if (!_resMap.ContainsKey(path))
+            {
+                Debug.LogError("路径未记录！加载失败！");
+                yield break;
+            }
             _resMap[path].m_State = ImageResLoadState.Loading;
-            //Debug.Log(path);
             UnityWebRequest m_unityWebRequest = UnityWebRequestTexture.GetTexture(path);
             yield return m_unityWebRequest.SendWebRequest();
             if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
             {
                 _resMap[path].resTexture2D = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
+                _resMap[path].resByte = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).data;
                 _resMap[path].m_State = ImageResLoadState.Loaded;
                 if (loadedDo != null)
                     loadedDo();
             }
             else
             {
+                Debug.LogError(m_unityWebRequest.error+path);
                 _resMap[path].resTexture2D = null;
+                _resMap[path].resByte = null;
                 _resMap[path].m_State = ImageResLoadState.Loaded;
                 if (loadedDo != null)
                     loadedDo();
             }
         }
-        public IEnumerator WWWLoadImage_Texture2D(ImageRes res)
-        {
-            m_unityWebRequest = UnityWebRequestTexture.GetTexture(res.imagePath);
-            yield return m_unityWebRequest.SendWebRequest();
-            if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
-            {
-                res.resTexture2D = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
-            }
-        }
 
-        private IEnumerator UnityWWWLoadImage_GetTexture(string path)
+        /// <summary>
+        /// UnityWebRequest.Get获取图片流
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="afterLoad"></param>
+        /// <returns></returns>
+        private IEnumerator WWWLoadImage_Byte(string path, System.Action afterLoad)
         {
-            m_unityWebRequest = UnityWebRequestTexture.GetTexture(path);
+            if (!_resMap.ContainsKey(path))
+            {
+                Debug.LogError("路径未记录！加载失败！");
+                yield break;
+            }
+            _resMap[path].m_State = ImageResLoadState.Loading;
+            UnityWebRequest m_unityWebRequest = UnityWebRequest.Get(path);
             yield return m_unityWebRequest.SendWebRequest();
             if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
             {
-                tempTex = ((DownloadHandlerTexture)m_unityWebRequest.downloadHandler).texture;
-                Debug.Log(m_unityWebRequest.downloadHandler.data.Length);
-                string temp = m_unityWebRequest.downloadHandler.data[0].ToString() + m_unityWebRequest.downloadHandler.data[1].ToString();
-                Debug.Log(m_unityWebRequest.downloadHandler.data[0]);
-                Debug.Log("加载完成");
-                Debug.Log(temp);
-                Texture2D te = new Texture2D(100, 100);
-                te.LoadImage(m_unityWebRequest.downloadHandler.data);
-                tempTex = te;
-            }
-            else
-            {
-                Debug.LogError(m_unityWebRequest.error);
-            }
-        }
-
-        private IEnumerator UnityWWWLoadImage_GetByte(string path, System.Action<byte[]> afterLoad)
-        {
-            m_unityWebRequest = UnityWebRequest.Get(path);
-            yield return m_unityWebRequest.SendWebRequest();
-            if (!m_unityWebRequest.isNetworkError && !m_unityWebRequest.isHttpError)
-            {
+                _resMap[path].resByte = m_unityWebRequest.downloadHandler.data;
+                _resMap[path].m_State = ImageResLoadState.Loaded;
                 if (afterLoad != null)
-                    afterLoad(m_unityWebRequest.downloadHandler.data);
+                    afterLoad();
                 //string temp = m_unityWebRequest.downloadHandler.data[0].ToString() + m_unityWebRequest.downloadHandler.data[1].ToString();
                 //Debug.Log(temp);
             }
             else
             {
-#if UNITY_EDITOR
-                Debug.LogError(m_unityWebRequest.error);
-#endif
+                Debug.LogError(m_unityWebRequest.error + path);
+                _resMap[path].resByte = m_unityWebRequest.downloadHandler.data;
+                _resMap[path].m_State = ImageResLoadState.Loaded;
                 if (afterLoad != null)
-                    afterLoad(null);
+                    afterLoad();
             }
         }
 
+       
+
+  
+
+     
 
 
         //按资源表加载
