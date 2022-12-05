@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Sxer.Load.ImageLoader.ImageLoadManager;
 
 namespace Sxer.Load.ImageLoader
 {
@@ -9,7 +8,7 @@ namespace Sxer.Load.ImageLoader
     {
         public string realPath;
 
-        public PathType pathType = ImageLoadManager.PathType.NullPath;
+        public ImageLoadManager.PathType pathType = ImageLoadManager.PathType.NullPath;
 
         public ImagePath()
         {
@@ -20,7 +19,7 @@ namespace Sxer.Load.ImageLoader
             realPath = path;
         }
 
-        public ImagePath(string path, PathType imagePathType)
+        public ImagePath(string path, ImageLoadManager.PathType imagePathType)
         {
             realPath = path;
             pathType = imagePathType;
