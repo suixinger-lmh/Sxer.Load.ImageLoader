@@ -8,6 +8,12 @@ namespace Sxer.Load.ImageLoader
 {
     /// <summary>
     /// 图片资源加载管理
+    /// 1.根据路径加载图片/卸载图片
+    /// 未实现：
+    /// 1.图片保存
+    /// 2.图片格式判断/转换
+    /// 3.图片尺寸修改
+    /// 4.图片效果(对比度，灰度图等)
     /// </summary>
     public partial class ImageLoadManager
     {
